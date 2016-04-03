@@ -85,7 +85,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public AMapLocationClient mLocationClient = null;
     public AMapLocationClientOption mLocationOption = null;
     private boolean isLocation;
-    private final int TIME = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -510,6 +509,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         public void run() {
             // handler自带方法实现定时器
             try {
+                int TIME = 2000;
                 handler.postDelayed(this, TIME);
                 if (temperature == null || humidity == null) {
                     ViewGroup view = (ViewGroup) mRecyclerView.getChildAt(0);

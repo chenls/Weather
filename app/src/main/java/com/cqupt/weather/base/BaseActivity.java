@@ -1,5 +1,6 @@
 package com.cqupt.weather.base;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.cqupt.weather.common.ACache;
 import com.cqupt.weather.modules.domain.Setting;
 
+@SuppressLint("Registered")
 public class BaseActivity extends AppCompatActivity {
 
     public ACache aCache;

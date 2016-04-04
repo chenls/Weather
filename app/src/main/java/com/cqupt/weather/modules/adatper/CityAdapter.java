@@ -1,5 +1,6 @@
 package com.cqupt.weather.modules.adatper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
     }
 
 
+    @SuppressLint("RecyclerView")
     @Override public void onBindViewHolder(final CityViewHolder holder, final int position) {
         holder.itemCity.setText(dataList.get(position));
         holder.cardView.setOnClickListener(new View.OnClickListener() {

@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ImageView banner = (ImageView) findViewById(R.id.bannner);
+        ImageView banner = (ImageView) findViewById(R.id.banner);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.VISIBLE);
 
@@ -228,7 +228,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
 
     /**
-     * <p>
+     * <p/>
      * 首先从本地缓存获取数据
      * if 有
      * 更新UI

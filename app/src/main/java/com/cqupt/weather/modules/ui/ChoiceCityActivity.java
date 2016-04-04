@@ -1,9 +1,13 @@
 package com.cqupt.weather.modules.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -47,6 +51,7 @@ public class ChoiceCityActivity extends BaseActivity {
     private List<Province> provincesList;
     private List<City> cityList;
     private CityAdapter mAdapter;
+    private FloatingActionButton fab;
 
     public static final int LEVEL_PROVINCE = 1;
     public static final int LEVEL_CITY = 2;
@@ -76,7 +81,7 @@ public class ChoiceCityActivity extends BaseActivity {
             }
         });
 
-        ImageView bannner = (ImageView) findViewById(R.id.bannner);
+        ImageView bannner = (ImageView) findViewById(R.id.banner);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         setStatusBarColorForKitkat(R.color.colorSunrise);
         if (mSetting.getInt(Setting.HOUR, 0) < 6 || mSetting.getInt(Setting.HOUR, 0) > 18) {
@@ -89,8 +94,31 @@ public class ChoiceCityActivity extends BaseActivity {
         }
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.VISIBLE);
+        //fab
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFabDialog();
+            }
+        });
     }
 
+    private void showFabDialog() {
+        new AlertDialog.Builder(ChoiceCityActivity.this).setTitle("点赞")
+                .setMessage("去项目地址给作者个Star，鼓励下作者୧(๑•̀⌄•́๑)૭✧")
+                .setPositiveButton("好叻", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Uri uri = Uri.parse(getString(R.string.app_html));   //指定网址
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);           //指定Action
+                        intent.setData(uri);                            //设置Uri
+                        ChoiceCityActivity.this.startActivity(intent);        //启动Activity
+                    }
+                })
+                .show();
+    }
 
     private void initRecyclerView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);

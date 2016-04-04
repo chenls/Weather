@@ -7,10 +7,12 @@ import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+
 import com.cqupt.weather.component.RetrofitSingleton;
 import com.cqupt.weather.modules.domain.Setting;
 import com.cqupt.weather.modules.domain.VersionAPI;
 import com.cqupt.weather.modules.ui.MainActivity;
+
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -22,66 +24,68 @@ public class CheckVersion {
 
     public static void checkVersion(final Context context, final View view) {
         RetrofitSingleton.getApiService(context)
-                         .mVersionAPI(Setting.API_TOKEN)
-                         .subscribeOn(Schedulers.io())
-                         .observeOn(AndroidSchedulers.mainThread())
-                         .subscribe(new Observer<VersionAPI>() {
-                             @Override public void onCompleted() {
-                             }
+                .mVersionAPI(Setting.API_TOKEN)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<VersionAPI>() {
+                    @Override
+                    public void onCompleted() {
+                    }
 
 
-                             @Override public void onError(Throwable e) {
-                                 RetrofitSingleton.disposeFailureInfo(e, context, view);
-                             }
+                    @Override
+                    public void onError(Throwable e) {
+                        RetrofitSingleton.disposeFailureInfo(e, context, view);
+                    }
 
 
-                             @Override public void onNext(VersionAPI versionAPI) {
-                                 //FIR上当前的versionCode
-                                 int firVersionCode = Integer.parseInt(versionAPI.version);
-                                 //FIR上当前的versionName
-                                 String firVersionName = versionAPI.versionShort;
-                                 int currentVersionCode = Util.getVersionCode(context);
-                                 String currentVersionName = Util.getVersion(context);
-                                 PLog.i(TAG, "当前版本:" + currentVersionName + "FIR上版本：" + firVersionName);
+                    @Override
+                    public void onNext(VersionAPI versionAPI) {
+                        //FIR上当前的versionCode
+                        int firVersionCode = Integer.parseInt(versionAPI.version);
+                        //FIR上当前的versionName
+                        String firVersionName = versionAPI.versionShort;
+                        int currentVersionCode = Util.getVersionCode(context);
+                        String currentVersionName = Util.getVersion(context);
+                        PLog.i(TAG, "当前版本:" + currentVersionName + "FIR上版本：" + firVersionName);
 
-                                 if (firVersionCode > currentVersionCode) {
-                                     //需要更新
-                                     showUpdateDialog(versionAPI, context);
-                                 }
-                                 else if (firVersionCode == currentVersionCode) {
-                                     //如果本地app的versionCode与FIR上的app的versionCode一致，则需要判断versionName.
-                                     if (!currentVersionName.equals(firVersionName)) {
-                                         showUpdateDialog(versionAPI, context);
-                                     }
-                                 }
-                                 else {
-                                     if (context instanceof MainActivity) {
+                        if (firVersionCode > currentVersionCode) {
+                            //需要更新
+                            showUpdateDialog(versionAPI, context);
+                        } else if (firVersionCode == currentVersionCode) {
+                            //如果本地app的versionCode与FIR上的app的versionCode一致，则需要判断versionName.
+                            if (!currentVersionName.equals(firVersionName)) {
+                                showUpdateDialog(versionAPI, context);
+                            }
+                        } else {
+                            if (context instanceof MainActivity) {
 
-                                     }
-                                     else {
+                            } else {
 
-                                         Snackbar.make(view, "已经是最新版本(⌐■_■)", Snackbar.LENGTH_SHORT).show();
-                                     }
-                                 }
-                             }
-                         });
+                                Snackbar.make(view, "已经是最新版本(⌐■_■)", Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
     }
 
 
     public static void showUpdateDialog(final VersionAPI versionAPI, final Context context) {
         String title = "发现新版" + versionAPI.name + "版本号：" + versionAPI.versionShort;
 
-        new AlertDialog.Builder(context).setTitle(title)
-                                        .setMessage(versionAPI.changelog)
-                                        .setPositiveButton("下载", new DialogInterface.OnClickListener() {
-                                            @Override public void onClick(DialogInterface dialog, int which) {
-                                                Uri uri = Uri.parse(versionAPI.updateUrl);   //指定网址
-                                                Intent intent = new Intent();
-                                                intent.setAction(Intent.ACTION_VIEW);           //指定Action
-                                                intent.setData(uri);                            //设置Uri
-                                                context.startActivity(intent);        //启动Activity
-                                            }
-                                        })
-                                        .show();
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(versionAPI.changelog)
+                .setPositiveButton("下载", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Uri uri = Uri.parse(versionAPI.updateUrl);   //指定网址
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);           //指定Action
+                        intent.setData(uri);                            //设置Uri
+                        context.startActivity(intent);        //启动Activity
+                    }
+                })
+                .show();
     }
 }

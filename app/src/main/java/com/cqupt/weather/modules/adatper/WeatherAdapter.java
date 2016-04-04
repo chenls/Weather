@@ -1,5 +1,6 @@
 package com.cqupt.weather.modules.adatper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -204,7 +205,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      * @Exception 发生异常
      */
     public static String dayForWeek(String pTime) throws Exception {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         c.setTime(format.parse(pTime));
         int dayForWeek = 0;

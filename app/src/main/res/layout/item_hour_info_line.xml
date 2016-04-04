@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -18,15 +19,15 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/icon_clock" />
+            android:src="@mipmap/icon_clock"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/one_clock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginLeft="12dp"
-            android:text="16:00" />
+            android:layout_marginLeft="12dp" />
 
     </LinearLayout>
 
@@ -40,7 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginLeft="18dp"
-            android:src="@mipmap/icon_temp" />
+            android:src="@mipmap/icon_temp"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/one_temp"
@@ -48,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:text="12°" />
+             />
     </LinearLayout>
 
     <LinearLayout
@@ -61,7 +63,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginRight="12dp"
-            android:src="@mipmap/icon_shidu" />
+            android:src="@mipmap/icon_shidu"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/one_humidity"
@@ -70,7 +73,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:minWidth="24sp"
-            android:text="81%" />
+           />
 
     </LinearLayout>
 
@@ -86,13 +89,14 @@
             android:layout_marginRight="8dp"
             android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"
-            android:src="@mipmap/icon_windspeed" />
+            android:src="@mipmap/icon_windspeed"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/one_wind"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="14Km" />
+          />
 
     </LinearLayout>
 

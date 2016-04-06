@@ -14,8 +14,8 @@
     <string name="app_html">https://github.com/chenls/Weather</string>
     <string name="weather_info">天气信息</string>
     <string name="greenhouse_data">花房数据</string>
-    <string name="temperature">%d℃</string>
-    <string name="humidity">%d%%</string>
+    <string name="temperature">%s℃</string>
+    <string name="humidity">%s%%</string>
     <string name="temp_0">18℃</string>
     <string name="humidity_0">46%</string>
     <string name="settings">设置</string>

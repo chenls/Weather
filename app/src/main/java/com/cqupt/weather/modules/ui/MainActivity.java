@@ -1,6 +1,7 @@
 package com.cqupt.weather.modules.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -41,6 +42,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cqupt.weather.R;
 import com.cqupt.weather.base.BaseActivity;
+import com.cqupt.weather.bean.historyData;
 import com.cqupt.weather.common.CheckVersion;
 import com.cqupt.weather.common.PLog;
 import com.cqupt.weather.common.Util;
@@ -54,7 +56,9 @@ import com.cqupt.weather.modules.ui.about.AboutActivity;
 import com.cqupt.weather.modules.ui.setting.SettingActivity;
 
 import java.util.Calendar;
+import java.util.List;
 
+import cn.bmob.v3.listener.FindListener;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -257,7 +261,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mAdapter = new WeatherAdapter(MainActivity.this, weather);
                 mRecyclerView.setAdapter(mAdapter);
                 //开始获取温湿度
-                handler.post(runnable);
+                queryGreenhouse(MainActivity.this);
             }
         };
 
@@ -501,32 +505,50 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    private final Handler handler = new Handler();
-    private TextView temperature, humidity;
-    int k = 10;
-    private final Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            // handler自带方法实现定时器
-            try {
-                int TIME = 2000;
-                handler.postDelayed(this, TIME);
-                if (temperature == null || humidity == null) {
-                    ViewGroup view = (ViewGroup) mRecyclerView.getChildAt(0);
-                    temperature = (TextView) findViewInViewGroupById(view, R.id.temperature);
-                    ViewGroup view2 = (ViewGroup) view.getChildAt(1);
-                    ViewGroup view3 = (ViewGroup) view2.getChildAt(1);
-                    humidity = (TextView) findViewInViewGroupById(view3, R.id.humidity);
-                } else {
-                    k++;
-                    temperature.setText(getString(R.string.temperature, k));
-                    humidity.setText(getString(R.string.humidity, k));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    private void queryGreenhouse(final Context context) {
+        if (!Util.isNetworkConnected(context)) {
+            return;
         }
-    };
+        final cn.bmob.v3.BmobQuery<historyData> bmobQuery = new cn.bmob.v3.BmobQuery<>();
+        bmobQuery.setLimit(100);
+        bmobQuery.order("-updatedAt");
+        //先判断是否有缓存
+        boolean isCache = bmobQuery.hasCachedResult(context, historyData.class);
+        if (isCache) {
+            bmobQuery.setCachePolicy(cn.bmob.v3.BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);    // 先从缓存取数据，如果没有的话，再从网络取。
+        } else {
+            bmobQuery.setCachePolicy(cn.bmob.v3.BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);    // 如果没有缓存的话，则先从网络中取
+        }
+        bmobQuery.findObjects(context, new FindListener<historyData>() {
+
+            @Override
+            public void onSuccess(List<historyData> historyDataList) {
+                setGreenhouseValue(historyDataList);
+                Log.d("myLog", historyDataList.toString());
+            }
+
+            @Override
+            public void onError(int code, String msg) {
+                Log.d("myLog", code + msg);
+            }
+        });
+    }
+
+    private void setGreenhouseValue(List<historyData> historyDataList) {
+
+        ViewGroup view = (ViewGroup) mRecyclerView.getChildAt(0);
+        TextView temperature = (TextView) findViewInViewGroupById(view, R.id.temperature);
+
+        ViewGroup view2 = (ViewGroup) view.getChildAt(1);
+        ViewGroup view3 = (ViewGroup) view2.getChildAt(1);
+        TextView humidity = (TextView) findViewInViewGroupById(view3, R.id.humidity);
+        historyData historyData = historyDataList.get(0);
+        assert temperature != null;
+        temperature.setText(getString(R.string.temperature, historyData.getTemp()));
+        assert humidity != null;
+        humidity.setText(getString(R.string.humidity, historyData.getHumd()));
+    }
+
 
     /**
      * 在ViewGroup中根据id进行查找

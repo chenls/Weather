@@ -261,6 +261,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mAdapter = new WeatherAdapter(MainActivity.this, weather);
                 mRecyclerView.setAdapter(mAdapter);
                 //开始获取温湿度
+                Log.d("myLog", "开始获取温湿度");
                 queryGreenhouse(MainActivity.this);
             }
         };
@@ -510,7 +511,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             return;
         }
         final cn.bmob.v3.BmobQuery<historyData> bmobQuery = new cn.bmob.v3.BmobQuery<>();
-        bmobQuery.setLimit(100);
+        bmobQuery.setLimit(1);
         bmobQuery.order("-updatedAt");
         //先判断是否有缓存
         boolean isCache = bmobQuery.hasCachedResult(context, historyData.class);
@@ -523,8 +524,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             @Override
             public void onSuccess(List<historyData> historyDataList) {
-                setGreenhouseValue(historyDataList);
                 Log.d("myLog", historyDataList.toString());
+                setGreenhouseValue(historyDataList);
             }
 
             @Override

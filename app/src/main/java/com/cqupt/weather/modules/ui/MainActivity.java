@@ -26,13 +26,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -89,6 +87,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public AMapLocationClient mLocationClient = null;
     public AMapLocationClientOption mLocationOption = null;
     private boolean isLocation;
+    private Weather myWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -255,13 +254,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             @Override
             public void onNext(Weather weather) {
-                mProgressBar.setVisibility(View.INVISIBLE);
-                new RefreshHandler().sendEmptyMessage(2);
-                collapsingToolbarLayout.setTitle(weather.basic.city);
-                mAdapter = new WeatherAdapter(MainActivity.this, weather);
-                mRecyclerView.setAdapter(mAdapter);
+                myWeather = weather;
                 //开始获取温湿度
-                Log.d("myLog", "开始获取温湿度");
                 queryGreenhouse(MainActivity.this);
             }
         };
@@ -524,8 +518,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             @Override
             public void onSuccess(List<historyData> historyDataList) {
-                Log.d("myLog", historyDataList.toString());
-                setGreenhouseValue(historyDataList);
+                mProgressBar.setVisibility(View.INVISIBLE);
+                new RefreshHandler().sendEmptyMessage(2);
+                collapsingToolbarLayout.setTitle(myWeather.basic.city);
+                mAdapter = new WeatherAdapter(MainActivity.this, myWeather, historyDataList);
+                mRecyclerView.setAdapter(mAdapter);
             }
 
             @Override
@@ -533,42 +530,5 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 Log.d("myLog", code + msg);
             }
         });
-    }
-
-    private void setGreenhouseValue(List<historyData> historyDataList) {
-
-        ViewGroup view = (ViewGroup) mRecyclerView.getChildAt(0);
-        TextView temperature = (TextView) findViewInViewGroupById(view, R.id.temperature);
-
-        ViewGroup view2 = (ViewGroup) view.getChildAt(1);
-        ViewGroup view3 = (ViewGroup) view2.getChildAt(1);
-        TextView humidity = (TextView) findViewInViewGroupById(view3, R.id.humidity);
-        historyData historyData = historyDataList.get(0);
-        assert temperature != null;
-        temperature.setText(getString(R.string.temperature, historyData.getTemp()));
-        assert humidity != null;
-        humidity.setText(getString(R.string.humidity, historyData.getHumd()));
-    }
-
-
-    /**
-     * 在ViewGroup中根据id进行查找
-     *
-     * @param vg ViewGroup
-     * @param id 如：R.id.tv_name
-     * @return View
-     */
-    public static View findViewInViewGroupById(ViewGroup vg, int id) {
-        for (int i = 0; i < vg.getChildCount(); i++) {
-            View v = vg.getChildAt(i);
-            if (v.getId() == id) {
-                return v;
-            } else {
-                if (v instanceof ViewGroup) {
-                    return findViewInViewGroupById((ViewGroup) v, id);
-                }
-            }
-        }
-        return null;
     }
 }

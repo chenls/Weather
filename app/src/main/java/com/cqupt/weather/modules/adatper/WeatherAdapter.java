@@ -2,6 +2,7 @@ package com.cqupt.weather.modules.adatper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,14 +14,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import com.cqupt.weather.R;
+import com.cqupt.weather.bean.historyData;
 import com.cqupt.weather.common.PLog;
 import com.cqupt.weather.modules.domain.Setting;
 import com.cqupt.weather.modules.domain.Weather;
+import com.cqupt.weather.modules.ui.ChoiceCityActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static String TAG = WeatherAdapter.class.getSimpleName();
@@ -34,12 +37,12 @@ public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private Weather mWeatherData;
     private Setting mSetting;
+    private List<historyData> historyDataList;
 
-
-    public WeatherAdapter(Context context, Weather weatherData) {
+    public WeatherAdapter(Context context, Weather weatherData, List<historyData> historyDataList) {
         mContext = context;
         this.mWeatherData = weatherData;
-
+        this.historyDataList = historyDataList;
         mSetting = Setting.getInstance();
     }
 
@@ -93,7 +96,27 @@ public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof GreenhouseInfoViewHolder) {
+            try {
+                historyData historyData = historyDataList.get(0);
+                ((GreenhouseInfoViewHolder) holder).temperature.setText(mContext
+                        .getString(R.string.temperature, historyData.getTemp()));
+                ((GreenhouseInfoViewHolder) holder).humidity.setText(mContext
+                        .getString(R.string.humidity, historyData.getHumd()));
 
+                ((GreenhouseInfoViewHolder) holder).mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO
+                        Intent intent = new Intent(mContext, ChoiceCityActivity.class);
+                        mContext.startActivity(intent);
+                    }
+                });
+            } catch (Exception e) {
+                PLog.e(TAG, e.toString());
+            }
+
+        }
         if (holder instanceof NowWeatherViewHolder) {
             try {
                 ((NowWeatherViewHolder) holder).tempFlu.setText(mWeatherData.now.tmp + "℃");
@@ -241,8 +264,15 @@ public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      * 花房温湿度
      */
     class GreenhouseInfoViewHolder extends RecyclerView.ViewHolder {
+        public final View mView;
+        private TextView temperature;
+        private TextView humidity;
+
         public GreenhouseInfoViewHolder(View itemView) {
             super(itemView);
+            mView = itemView;
+            temperature = (TextView) itemView.findViewById(R.id.temperature);
+            humidity = (TextView) itemView.findViewById(R.id.humidity);
         }
     }
 

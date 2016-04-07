@@ -528,6 +528,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onError(int code, String msg) {
                 Log.d("myLog", code + msg);
+                //重新获取
+                queryGreenhouse(MainActivity.this);
             }
         });
     }

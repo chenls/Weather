@@ -19,7 +19,7 @@ import com.cqupt.weather.bean.historyData;
 import com.cqupt.weather.common.PLog;
 import com.cqupt.weather.modules.domain.Setting;
 import com.cqupt.weather.modules.domain.Weather;
-import com.cqupt.weather.modules.ui.ChoiceCityActivity;
+import com.cqupt.weather.modules.ui.setting.GreenhouseActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -107,8 +107,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 ((GreenhouseInfoViewHolder) holder).mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO
-                        Intent intent = new Intent(mContext, ChoiceCityActivity.class);
+                        Intent intent = new Intent(mContext, GreenhouseActivity.class);
                         mContext.startActivity(intent);
                     }
                 });

@@ -12,7 +12,7 @@ import cn.bmob.v3.Bmob;
 
 public class BaseApplication extends Application {
 
-    //public static final String APP_ID = "e507c0bcc118a03dc86d3c11548203a1";
+//    public static final String APP_ID = "e507c0bcc118a03dc86d3c11548203a1";
     public static final String APP_ID = "a977b306214e65c5ec7042f1a3b60800";
     public static String cacheDir = "";
     public static Context mAppContext = null;
